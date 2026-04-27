@@ -1,0 +1,58 @@
+cuas-radio-interceptor/
+│
+├── .github/                             # CI/CD for DSP algorithm validation
+│   └── workflows/
+│       ├── test-signal-logic.yml        # Validates FFT and hopping detection math
+│       └── build-sdr-stack.yml
+│
+├── sdr_ingestion/                       # C++: High-Speed Raw IQ Data Capture
+│   ├── src/
+│   │   ├── main.cpp                     # Entry: Interfaces with librtlsdr or libhackrf
+│   │   ├── dsp/
+│   │   │   ├── fast_fourier.cpp         # FFT implementation (using FFTW or Liquid-DSP)
+│   │   │   └── decimation.cpp           # Downsamples high-bandwidth streams for analysis
+│   │   └── buffer/
+│   │       └── circular_buffer.hpp      # Lock-free storage for raw IQ samples
+│   ├── include/
+│   └── CMakeLists.txt
+│
+├── signal_classifier/                   # Go: The Pattern Recognition Brain
+│   ├── cmd/
+│   │   └── classifier/
+│   │       └── main.go                  # Orchestrates the signal analysis pipeline
+│   ├── internal/
+│   │   ├── protocol/
+│   │   │   ├── elrs_signature.go        # Pattern for ExpressLRS hopping sequences
+│   │   │   └── ocusync_signature.go     # Pattern for DJI OcuSync signal characteristics
+│   │   ├── analysis/
+│   │   │   ├── burst_detector.go        # Identifies rapid energy spikes in specific sub-bands
+│   │   │   └── distance_estimator.go    # Uses Friis Path Loss model to estimate drone range
+│   │   └── stream/
+│   │       └── zmq_subscriber.go        # Ingests FFT data from the C++ SDR engine
+│   ├── go.mod
+│   └── Dockerfile
+│
+├── tactical_dashboard/                  # React + TypeScript: The SIGINT Spectrogram
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── WaterfallDisplay.tsx     # WebGL canvas rendering a rolling spectrogram
+│   │   │   ├── ThreatAlerts.tsx         # HUD that pops up when a drone signature is matched
+│   │   │   └── SignalStrengthMeter.tsx  # RSSI-based distance visualization
+│   │   ├── rendering/
+│   │   │   └── spectrogram_shader.glsl  # Custom shader to map signal power to color scales
+│   │   ├── App.tsx
+│   │   └── index.tsx
+│   ├── package.json
+│   └── Dockerfile
+│
+├── infrastructure/                      # Deployment Orchestration
+│   ├── sdr-gateway.yaml                 # Privileged container for hardware USB access
+│   ├── classifier-node.yaml             # Compute-heavy analysis pod
+│   └── timescaledb.yaml                 # Stores historical signal logs for post-action review
+│
+├── docker-compose.yml                   # Boots the C++ Ingest, Go Brain, and React UI
+├── Makefile                             # Build and flash shortcuts
+└── README.md
+
+
+
