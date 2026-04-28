@@ -1,0 +1,24 @@
+name: build-sdr-stack
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build-cpp-ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure C++ ingest
+        run: cmake -S sdr_ingestion -B build/sdr_ingestion
+      - name: Build C++ ingest
+        run: cmake --build build/sdr_ingestion
+
+  build-containers:
+    runs-on: ubuntu-latest
+    needs: build-cpp-ingest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build stack images
+        run: docker compose build

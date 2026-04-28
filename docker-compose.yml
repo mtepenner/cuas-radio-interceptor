@@ -1,0 +1,35 @@
+services:
+  sdr_ingestion:
+    build:
+      context: ./sdr_ingestion
+    command: ["/usr/local/bin/sdr-ingestion"]
+
+  signal_classifier:
+    build:
+      context: ./signal_classifier
+    environment:
+      SIGNAL_SOURCE: seeded
+      DATABASE_URL: postgres://analyst:interceptor@timescaledb:5432/interceptor
+    depends_on:
+      - timescaledb
+    ports:
+      - "8080:8080"
+
+  tactical_dashboard:
+    build:
+      context: ./tactical_dashboard
+      args:
+        VITE_CLASSIFIER_API_URL: http://localhost:8080
+    depends_on:
+      - signal_classifier
+    ports:
+      - "3000:80"
+
+  timescaledb:
+    image: timescale/timescaledb:2.17.2-pg16
+    environment:
+      POSTGRES_DB: interceptor
+      POSTGRES_USER: analyst
+      POSTGRES_PASSWORD: interceptor
+    ports:
+      - "5432:5432"

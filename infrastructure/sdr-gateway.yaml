@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sdr-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sdr-gateway
+  template:
+    metadata:
+      labels:
+        app: sdr-gateway
+    spec:
+      containers:
+        - name: sdr-gateway
+          image: ghcr.io/mtepenner/cuas-radio-interceptor/sdr-ingestion:latest
+          securityContext:
+            privileged: true
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "512Mi"

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: signal-classifier
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: signal-classifier
+  template:
+    metadata:
+      labels:
+        app: signal-classifier
+    spec:
+      containers:
+        - name: signal-classifier
+          image: ghcr.io/mtepenner/cuas-radio-interceptor/signal-classifier:latest
+          env:
+            - name: DATABASE_URL
+              value: postgres://analyst:interceptor@timescaledb:5432/interceptor
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: signal-classifier
+spec:
+  selector:
+    app: signal-classifier
+  ports:
+    - port: 8080
+      targetPort: 8080

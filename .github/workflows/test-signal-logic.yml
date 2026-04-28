@@ -1,0 +1,32 @@
+name: test-signal-logic
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  classifier-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+      - name: Run classifier tests
+        working-directory: signal_classifier
+        run: go test ./...
+
+  dashboard-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dashboard dependencies
+        working-directory: tactical_dashboard
+        run: npm install
+      - name: Build dashboard
+        working-directory: tactical_dashboard
+        run: npm run build
