@@ -18,7 +18,7 @@ std::vector<double> compute_magnitude_spectrum(const std::vector<std::complex<fl
         std::complex<double> accumulator{0.0, 0.0};
         for (std::size_t sample_index = 0; sample_index < sample_count; ++sample_index) {
             const auto angle = -2.0 * std::numbers::pi * static_cast<double>(frequency_index * sample_index) / static_cast<double>(sample_count);
-            accumulator += samples[sample_index] * std::complex<double>(std::cos(angle), std::sin(angle));
+            accumulator += std::complex<double>(samples[sample_index]) * std::complex<double>(std::cos(angle), std::sin(angle));
         }
         magnitudes.push_back(20.0 * std::log10(std::abs(accumulator) + 1e-6));
     }
