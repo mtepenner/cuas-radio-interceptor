@@ -29,7 +29,7 @@ The C-UAS (Counter Unmanned Aerial Systems) Radio Interceptor is a high-performa
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/cuas-radio-interceptor.git
+   git clone https://github.com/mtepenner/cuas-radio-interceptor.git
    cd cuas-radio-interceptor
    ```
 
